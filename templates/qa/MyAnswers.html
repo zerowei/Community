@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load humanize %}
+
+{% block title %}{% trans "MyQuestions" %}{% endblock title %}
+
+{% block head %}
+    <link href="{% static 'css/questions.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bar.css' %}" rel="stylesheet">
+    <!--script src="{!% static 'js/questions.js' %}"></script-->
+{% endblock head %}
+
+{% block main %}
+    <div class="mainTheme">
+        <div class="col-md-9" style="border:1px solid #dedede;">
+            <div class="AnswerList">
+                {% for answer in answers %}
+                    <p><a href="{% url 'profile:ShowProfile' answer.user.id%}">{{ answer.user.username }}</a>&nbsp;&nbsp;replied</p>
+                    <p><a href="{% url 'qa:QuestionDetail' request.user.id answer.question.id %}">"{{ answer.description }}"</a></p>
+                    <div class="questionTitle">
+                        <p>{% trans 'Title: ' %}<a href="{% url 'qa:QuestionDetail' request.user.id answer.question.id %}">{{ answer.question.title }}</a></p>
+                    </div>
+                    {% if answer.create_date %}
+                        <div class="small">
+                        <p>{% trans 'Replied at' %} {{ answer.create_date|naturaltime }}</p>
+                        </div>
+                    {% endif %}
+                    <div class="divider" style="letter-spacing: -1px;color: #ddd;">—————————————————————————————————————————————————————————————</div>
+                    {% empty %}
+                        {% trans 'No Answer' %}
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                <ul>
+                    {% if is_paginated %}
+                        {% if page_obj.has_previous %}
+                            <li style="display: inline"><a href="?page={{ page_obj.previous_page_number }}">‹‹{% trans 'previous page' %} </a></li>
+                        {% else %}
+                            <li class="disabled" style="display: inline"><a href="#">‹‹{% trans "previous page" %} </a></li>
+                        {% endif %}
+                        <span class="page-current">
+                            <li style="display: inline"> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </li>
+                        </span>
+                        {% if page_obj.has_next %}
+                            <li style="display: inline"><a href="?page={{ page_obj.next_page_number }}"> {% trans 'next page' %}››</a></li>
+                        {% else %}
+                            <li class="disabled" style="display: inline"><a href="#"> {% trans "next page" %}››</a></li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3" style="border:1px solid #dedede;text-align: center">
+            <div class="row" style="margin:70px auto">
+                <div class="LoadImage">
+                    {% if profile.photo %}
+                        <a href="{% url 'profile:ShowProfile' request.user.id %}"><img style="height:12%;margin-right: auto;margin-left: auto" src="{{MEDIA_URL}}{{profile.photo_90x90.url}}" class="img-responsive" alt=""></a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'profile:ShowProfile' request.user.id %}">{{ request.user.username }}</a>
+                <h5>{% trans 'Lv '%}{{ request.user.level }}</h5>
+                <div class="experience">
+                    <h5>{% trans 'Experience: ' %}</h5>
+                    <div class="out">
+                        <div class="in" id="in"></div>
+                         <script>
+                            let rate = 0;
+                            rate = {{ rate|safe }};
+                            document.getElementById("in").style.width = rate + "px";
+                         </script>
+                        <div class="num">{{ user.experience }} / {{ user.totalexp }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+</html>

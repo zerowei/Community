@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block head %}
+  <link href="{% static 'css/signup.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block main %}
+    <div class="ReturnQList">
+        <a href="{% url 'qa:QuestionList' request.user.id%}">{% trans 'QuestionList' %}</a>
+    </div>
+    <div class="signup">
+        <h2>{% trans 'Ask Question' %}</h2>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <span class="help-block">{{ field.help_text }}</span>
+                {% endif %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <label class="control-label">{{ error }}</label>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        <button type="submit" class="btn btn-primary btn-lg">{% trans 'Submit your question' %}</button>
+        </form>
+    </div>
+{% endblock main %}
+</html>

@@ -1,0 +1,29 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load humanize %}
+<html lang="en">
+<div class="Answer">
+    <div class="AnswerUserImage">
+        <img src="{{ MEDIA_URL }}{{ answer.profile.photo_90x90.url }}" alt="">
+    </div>
+    <div class="Username" style="line-height: 2;margin-left: 0.5%">
+        <a href="{% url 'profile:ShowProfile'  answer.user.id %}">{{ answer.user.username }}</a>
+    </div>
+    <div class="Description" style="line-height: 2">
+        {{ answer.description|safe }}
+    </div>
+    <div class="CreateDate">
+        <small class="Date">{% trans 'Answered' %} {{ answer.create_date|naturaltime }}</small>
+        {% ifequal answer.user.id request.user.id %}
+        <a class="deleteAnswer" data-title="Delete this answer?" href="{% url 'qa:deleteAnswer' answer.question.pk answer.pk %}" style="float:right">{% trans 'delete' %}</a>
+        {% endifequal %}
+            <script>
+                $('a.deleteAnswer').confirm({
+                    theme: 'bootstrap',
+                    content: 'This answer will be deleted right now',
+                });
+            </script>
+    </div>
+    <div class="divider" style="letter-spacing: -1px;color: #ddd;">———————————————————————————————————————————————————————————————————————</div>
+</div>
+</html>

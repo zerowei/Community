@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}Community>{{ user.username }}{% endblock %}
+
+{% block head %}
+    <link href="{% static 'css/profile.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery.bullseye-1.0-min.js' %}"></script>
+{% endblock head %}
+{% block main %}
+    <div class="page-header">
+        {% ifequal user.id request.user.id %}
+            <a href={% url 'profile:UpdateProfile' user.id %}>{% trans 'Edit' %}</a>
+        {% endifequal %}
+    </div>
+    <div class="profile">
+        <div class="row">
+            <div class="LoadImage">
+                {% if profile.photo %}
+                <img style="height:12%;margin-left: 2%" src="{{MEDIA_URL}}{{profile.photo_90x90.url}}" class="img-responsive" alt="">
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <div class="basicInfo" style="text-align: left">
+                    <h3>{{ user.username }}</h3>
+                    <p>{% trans 'UID:' %}&nbsp;&nbsp;&nbsp;{{ user.id }}</p>
+                    <h5>{% trans 'Level:'%}&nbsp;&nbsp;&nbsp;{% trans 'Lv' %}{{ user.level }}</h5>
+                    <h5>{% trans 'Total Experience:'%}&nbsp;&nbsp;&nbsp;{{ user.experience }}</h5>
+                    <h5>{% trans 'To next level:' %}&nbsp;&nbsp;&nbsp;{{ diff }}</h5>
+                    <p>{% trans 'Email address:' %}&nbsp;&nbsp;&nbsp;{{ user.email }}</p>
+                    <h5>{% trans 'Area:' %}&nbsp;&nbsp;&nbsp;{{ profile.area }}</h5>
+                    <h5>{% trans 'Nickname:' %}&nbsp;&nbsp;&nbsp;{{ profile.nickname }}</h5>
+                    <h5>{% trans 'Current job:' %}&nbsp;&nbsp;&nbsp;{{ profile.job }}</h5>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main %}
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load i18n %}
+{% load staticfiles %}
+<form action="{% url 'qa:CreateAnswer' question.id %}" method="post" role="form">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.description|safe }}
+    </div>
+    <button type="submit" class="btn-primary btn btn-lg">{% trans "Submit Your Answer" %}</button>
+</form>
+</html>

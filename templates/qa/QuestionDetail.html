@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% extends 'home/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load humanize %}
+
+<link href="https://cdn.bootcss.com/jquery-confirm/3.3.2/jquery-confirm.min.css" rel="stylesheet">
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+<html lang="en">
+
+{% block title %}{% trans 'Question Detail' %}{% endblock title %}
+
+{% block head %}
+    <link href="{% static 'css/questions.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bar.css' %}" rel="stylesheet">
+    <!--script-- src="{!--% static 'js/questions.js' %--}"></script-->
+{% endblock head %}
+
+{% block main %}
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="{% url 'qa:QuestionList' request.user.id%}">{% trans 'Questions' %}</a>
+        <a class="breadcrumb-item active">{% trans '/ Current Question' %}</a>
+    </nav>
+    <div class="questionDetail">
+    <div class="col-md-10" style="border:1px solid #dedede;">
+    <div class="Question" >
+        <h2>{{ question.title }}</h2>
+        <div class="QuestionUserImage">
+            <a href="{% url 'profile:ShowProfile' question.user.id %}"><img src="{{ MEDIA_URL }}{{ profile.photo_90x90.url }}" alt=""></a>
+        </div>
+        <div class="QuestionDescription" style="line-height: 3">
+            {{ question.description|safe }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <small class="CreateDate">
+                {% if question.create_date %}
+                {{ question.create_date|naturaltime}}
+                {% endif %}
+            </small>
+            {% ifequal question.user.id request.user.id %}
+                <a class="deleteQuestion" data-title="Delete this question?" href="{% url 'qa:deleteQuestion' question.pk %}" style="float:right">{% trans 'delete' %}</a>
+                <script>
+                    $('a.deleteQuestion').confirm({
+                        theme: 'bootstrap',
+                        content: 'This question will be deleted right now',
+                    });
+                </script>
+            {% endifequal %}
+        </div>
+    </div>
+    <div class="page-header">
+        <h4>{% trans 'Answers' %}</h4>
+    </div>
+    <div class="Answers">
+        {% for answer in answers %}
+            {% include 'qa/AnswerList.html' with answer=answer %}
+        {% endfor %}
+    </div>
+    <div class="CreateAnswer">
+        {% if not user.is_anonymous %}
+            <h4>{% trans 'Write Your Answer' %}</h4>
+            {% include 'qa/CreateAnswer.html' with question=question %}
+        {% endif %}
+    </div>
+    </div>
+    <div class="col-md-2" style="border:1px solid #dedede;text-align: center">
+            <div class="row">
+                <div class="LoadImage">
+                    {% if profile.photo %}
+                        <a href="{% url 'profile:ShowProfile' request.user.id %}"><img style="height:12%;margin-right: auto;margin-left: auto" src="{{MEDIA_URL}}{{userProfile.photo_90x90.url}}" class="img-responsive" alt=""></a>
+                    {% endif %}
+                </div>
+                <a href="{% url 'profile:ShowProfile' request.user.id %}">{{ request.user.username }}</a>
+                <h5>{% trans 'Lv '%}{{ request.user.level }}</h5>
+                <div class="experience">
+                    <h5>{% trans 'Experience: ' %}</h5>
+                    <div class="out">
+                        <div class="in" id="in"></div>
+                         <script>
+                            let rate = 0;
+                            rate = {{ rate|safe }};
+                            document.getElementById("in").style.width = rate + "px";
+                         </script>
+                        <div class="num">{{ user.experience }} / {{ user.totalexp }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock main %}
+</html>

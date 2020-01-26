@@ -1,0 +1,29 @@
+        .out{
+            position:relative;
+            /*margin:auto;*/
+            /*margin-top:20%;*/
+            margin-left: auto;
+            margin-right: auto;
+            text-align:center;
+            height:20px;
+            width:150px;
+            background-color: #fff;
+            border:1px solid #000;
+        }
+        .in{
+            position:absolute;
+            margin-left: auto;
+            margin-right: auto;
+            height:20px;
+            width:10px;
+            background-color: #ddd;
+        }
+        .num{
+            position:absolute;
+            margin-left: auto;
+            margin-right: auto;
+            height:20px;
+            line-height:20px;
+            width:150px;
+            text-align:center;
+        }
